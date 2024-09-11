@@ -1,0 +1,35 @@
+<div class="container">
+  <h2>Identificar Planta</h2>
+
+  <!-- Subir la imagen -->
+  <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+
+  <!-- Botón para enviar la imagen -->
+  <button (click)="identifyPlant()" [disabled]="!selectedImage || isLoading">Identificar Planta</button>
+
+  <!-- Mostrar una indicación de carga mientras se hace la solicitud -->
+  <div ngIf="isLoading">
+    <p>Identificando planta, por favor espera...</p>
+  </div>
+
+  <!-- Mostrar error si ocurre -->
+  <div ngIf="errorMessage">
+    <p class="error">{{ errorMessage }}</p>
+  </div>
+
+  <!-- Mostrar los resultados cuando estén disponibles -->
+  <div ngIf="result?.result?.classification?.suggestions">
+    <h3>Resultados:</h3>
+    <div ngFor="let suggestion of result.result.classification.suggestions">
+      <p><strong>Nombre Común:</strong> {{ suggestion.name }}</p>
+      <p><strong>Detalles:</strong> {{ suggestion.details.language }} (ID: {{ suggestion.details.entity_id }})</p>
+      <div ngIf="suggestion.similar_images?.length">
+        <h4>Imágenes Similares:</h4>
+        <div ngFor="let image of suggestion.similar_images">
+          <img [src]="image.url" [alt]="suggestion.name" style="width: 100px; height: auto;"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
